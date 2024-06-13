@@ -3,6 +3,8 @@ import { ResumeRepository } from '../repositories/resumes.repository.js';
 export class ResumeService {
   resumeRepository = new ResumeRepository();
 
+  // 나의 이력서 생성
+
   // 우선 createResume를 통해서 입력되는 값이 오류가 없는지 확인하고 통과 되면
   // createById에서 userId를 통해서 Repository에서 userId로 찾은 정보를 통해서 일치하는 아이디에
   // title, selfIntroduction를 DB에 입력하고 반환되는 값을 createdResume에 넣는다.
@@ -27,5 +29,29 @@ export class ResumeService {
       title: createdResume.title,
       selfIntroduction: createdResume.selfIntroduction,
     };
+  };
+
+  // 나의 이력서 목록 조회
+  ResumesByMyId = async (userId, sort) => {
+    const foundMyResumes = await this.resumeRepository.ResumesByMyId(
+      userId,
+      sort,
+    );
+
+    if (!foundMyResumes) {
+      throw new Error({ data: [] });
+    }
+
+    const resumes = foundMyResumes.map((resume) => ({
+      resumeId: resume.resumeId,
+      name: resume.user.name,
+      title: resume.title,
+      self: resume.selfIntroduction,
+      status: resume.status,
+      createdAt: resume.createdAt,
+      updatedAt: resume.updatedAt,
+    }));
+
+    return resumes;
   };
 }
