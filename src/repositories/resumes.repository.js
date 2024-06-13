@@ -62,4 +62,15 @@ export class ResumeRepository {
     });
     return changedResume;
   };
+
+  // 이력서 삭제
+  deleteResume = async (userId, resumeId) => {
+    const deletedResume = await prisma.resumes.delete({
+      where: {
+        userId,
+        resumeId: Number(resumeId),
+      },
+    });
+    return deletedResume;
+  };
 }

@@ -19,7 +19,7 @@ router.get('/resume/:resumeId', requireAccessTokenMiddleware, resumeController.m
 router.patch('/resume/:resumeId', requireAccessTokenMiddleware, resumeController.changeResume);
 
 // 이력서 삭제
-router.delete();
+router.delete('/resume/:resumeId', requireAccessTokenMiddleware, resumeController.deleteResume);
 
 // //이력서 생성 API (AccessToken 인증 필요)
 // router.post('/resume', requireAccessTokenMiddleware, async (req, res, next) => {
@@ -249,47 +249,41 @@ router.delete();
 //   },
 // );
 
-// // 이력서 삭제 API
+// 이력서 삭제 API
 
-// router.delete(
-//   '/resume/:resumeId',
-//   requireAccessTokenMiddleware,
-//   async (req, res, next) => {
-//     //    1. 요청 정보
-//     //     - 사용자 정보는 인증 Middleware(`req.user`)를 통해서 전달 받습니다.
-//     const user = req.user;
+// router.delete('/resume/:resumeId', requireAccessTokenMiddleware, async (req, res, next) => {
+//   //    1. 요청 정보
+//   //     - 사용자 정보는 인증 Middleware(`req.user`)를 통해서 전달 받습니다.
+//   const user = req.user;
 
-//     //     - 이력서 ID를 Path Parameters(`req.params`)로 전달 받습니다.
-//     const { resumeId } = req.params;
+//   //     - 이력서 ID를 Path Parameters(`req.params`)로 전달 받습니다.
+//   const { resumeId } = req.params;
 
-//     const resume = await prisma.resumes.findFirst({
-//       where: {
-//         resumeId: +resumeId,
-//         userId: user.userid,
-//       },
-//     });
+//   const resume = await prisma.resumes.findFirst({
+//     where: {
+//       resumeId: +resumeId,
+//       userId: user.userid,
+//     },
+//   });
 
-//     //    2. 유효성 검증 및 에러 처리
-//     //     - 이력서 정보가 없는 경우 - “이력서가 존재하지 않습니다.”
-//     if (!resume) {
-//       return res.status(400).json({ message: '이력서가 존재하지 않습니다.' });
-//     }
-//     //    3. 비즈니스 로직(데이터 처리)
-//     //     - 현재 로그인 한 사용자가 작성한 이력서만 삭제합니다.
-//     //     - DB에서 이력서 조회 시 이력서 ID, 작성자 ID가 모두 일치해야 합니다.
-//     //     - DB에서 이력서 정보를 삭제합니다.
-//     const delresume = await prisma.resumes.delete({
-//       where: {
-//         resumeId: +resumeId,
-//         userId: user.userId, // 위에서 검증이 완료되었기 때문에 없어도 되지만 만약을 대비해서 적어놓음.
-//       }, // 여기서 왜  data가 없는지 생각해보자.      정답은 바로 위에 where에서 이미 resumeId를 찾았기 때문에 삭제 시에는 따로 찾을 필요가 없는 것이다.
-//     }); // 삭제 외에 수정이나 작성을 생각해보자 이력서는 찾았어 (= 이력서id) 근데 그 이력서에서 뭘 수정할건데? title? content? 지정을 안했잖아? 그니까 지정하려고 data를 넣는 것이다.
-//     //    4. 반환 정보
-//     //     - 삭제 된 이력서 ID를 반환합니다.
-//     return res
-//       .status(201)
-//       .json({ message: `이력서 ID가 ${resumeId}인 이력서를 삭제하였습니다.` });
-//   },
-// );
+//   //    2. 유효성 검증 및 에러 처리
+//   //     - 이력서 정보가 없는 경우 - “이력서가 존재하지 않습니다.”
+//   if (!resume) {
+//     return res.status(400).json({ message: '이력서가 존재하지 않습니다.' });
+//   }
+//   //    3. 비즈니스 로직(데이터 처리)
+//   //     - 현재 로그인 한 사용자가 작성한 이력서만 삭제합니다.
+//   //     - DB에서 이력서 조회 시 이력서 ID, 작성자 ID가 모두 일치해야 합니다.
+//   //     - DB에서 이력서 정보를 삭제합니다.
+//   const delresume = await prisma.resumes.delete({
+//     where: {
+//       resumeId: +resumeId,
+//       userId: user.userId, // 위에서 검증이 완료되었기 때문에 없어도 되지만 만약을 대비해서 적어놓음.
+//     }, // 여기서 왜  data가 없는지 생각해보자.      정답은 바로 위에 where에서 이미 resumeId를 찾았기 때문에 삭제 시에는 따로 찾을 필요가 없는 것이다.
+//   }); // 삭제 외에 수정이나 작성을 생각해보자 이력서는 찾았어 (= 이력서id) 근데 그 이력서에서 뭘 수정할건데? title? content? 지정을 안했잖아? 그니까 지정하려고 data를 넣는 것이다.
+//   //    4. 반환 정보
+//   //     - 삭제 된 이력서 ID를 반환합니다.
+//   return res.status(201).json({ message: `이력서 ID가 ${resumeId}인 이력서를 삭제하였습니다.` });
+// });
 
 export default router;

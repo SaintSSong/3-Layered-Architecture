@@ -61,4 +61,18 @@ export class ResumeController {
       next(err);
     }
   };
+
+  // 이력서 삭제
+  deleteResume = async (req, res, next) => {
+    try {
+      const { userId } = req.user;
+      const { resumeId } = req.params;
+
+      const deletedResume = await this.resumeService.deleteResume(userId, resumeId);
+
+      return res.status(200).json({ message: '이력서 ID가 ' + deletedResume.resumeId + '인 이력서를 삭제했습니다.' });
+    } catch (err) {
+      next(err);
+    }
+  };
 }
