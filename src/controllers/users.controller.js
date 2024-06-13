@@ -1,4 +1,5 @@
 import { UserService } from '../services/users.service.js';
+import { HTTP_STATUS } from '../constants/http-status.constant.js';
 
 export class UserController {
   userService = new UserService();
@@ -8,7 +9,7 @@ export class UserController {
       const data = req.user;
       // const userInfo = await this.userService.getMyInfo(userId);
 
-      return res.status(200).json({ data });
+      return res.status(HTTP_STATUS.OK).json({ data });
     } catch (err) {
       next(err);
     }

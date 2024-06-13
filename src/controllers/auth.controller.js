@@ -1,4 +1,6 @@
 import { AuthService } from '../services/auth.service.js';
+import { HttpError } from '../errors/http.error.js';
+import { HTTP_STATUS } from '../constants/http-status.constant.js';
 
 export class AuthController {
   authService = new AuthService();
@@ -8,14 +10,9 @@ export class AuthController {
     try {
       const { email, password, passwordCheck, name } = req.body;
 
-      const createdUser = await this.authService.signUp(
-        email,
-        password,
-        passwordCheck,
-        name,
-      );
+      const createdUser = await this.authService.signUp(email, password, passwordCheck, name);
 
-      return res.status(201).json({ data: createdUser });
+      return res.status(HTTP_STATUS.OK).json({ data: createdUser });
     } catch (err) {
       next(err);
     }
@@ -28,7 +25,7 @@ export class AuthController {
 
       const logInAuth = await this.authService.logIn(email, password);
 
-      return res.status(201).json({
+      return res.status(HTTP_STATUS.OK).json({
         data: logInAuth,
       });
     } catch (err) {

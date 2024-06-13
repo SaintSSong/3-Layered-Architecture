@@ -1,4 +1,6 @@
 import { ResumeService } from '../services/resumes.service.js';
+import { HttpError } from '../errors/http.error.js';
+import { HTTP_STATUS } from '../constants/http-status.constant.js';
 
 export class ResumeController {
   resumeService = new ResumeService();
@@ -11,7 +13,7 @@ export class ResumeController {
 
       const createResume = await this.resumeService.createResume(userId, title, selfIntroduction);
 
-      return res.status(201).json({ data: createResume });
+      return res.status(HTTP_STATUS.CREATED).json({ data: createResume });
     } catch (err) {
       next(err);
     }
@@ -27,7 +29,7 @@ export class ResumeController {
 
       const readMyResumes = await this.resumeService.ResumesByMyId(userId, sort);
 
-      return res.status(200).json({ data: readMyResumes });
+      return res.status(HTTP_STATUS.OK).json({ data: readMyResumes });
     } catch (err) {
       next(err);
     }
@@ -41,7 +43,7 @@ export class ResumeController {
 
       const myResume = await this.resumeService.myResume(userId, resumeId);
 
-      return res.status(200).json({ myResume });
+      return res.status(HTTP_STATUS.OK).json({ myResume });
     } catch (err) {
       next(err);
     }
@@ -56,7 +58,7 @@ export class ResumeController {
 
       const changeResume = await this.resumeService.changeResume(userId, resumeId, title, selfIntroduction);
 
-      return res.status(200).json({ changeResume });
+      return res.status(HTTP_STATUS.CREATED).json({ changeResume });
     } catch (err) {
       next(err);
     }
@@ -70,7 +72,9 @@ export class ResumeController {
 
       const deletedResume = await this.resumeService.deleteResume(userId, resumeId);
 
-      return res.status(200).json({ message: '이력서 ID가 ' + deletedResume.resumeId + '인 이력서를 삭제했습니다.' });
+      return res
+        .status(HTTP_STATUS.OK)
+        .json({ message: '이력서 ID가 ' + deletedResume.resumeId + '인 이력서를 삭제했습니다.' });
     } catch (err) {
       next(err);
     }
