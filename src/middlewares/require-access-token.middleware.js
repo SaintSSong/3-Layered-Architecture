@@ -1,5 +1,7 @@
 import jwt from 'jsonwebtoken';
-import { prisma } from '../utils/prisma.util.js';
+// import { prisma } from '../utils/prisma.util.js';
+import { ACCESS_TOKEN_SECRET_KEY } from '../constants/env.constant.js';
+import { UsersRepository } from '../repositories/users.repository.js';
 
 // 1. 요청 정보
 //     - AccessToken을 Request Header의 Authorization
@@ -8,6 +10,8 @@ import { prisma } from '../utils/prisma.util.js';
 
 export default async (req, res, next) => {
   try {
+    const usersRepository = new UsersRepository(); // 클래스가 아닌 곳에서 사용하려면 const를 붙여놔야함.
+
     // const { accessToken } = req.cookies;
     const accessToken = req.headers['authorization'];
 
@@ -26,17 +30,13 @@ export default async (req, res, next) => {
     }
 
     //     - AccessToken의 유효기한이 지난 경우 - “인증 정보가 만료되었습니다.” // 검증을 통과하면 payload를 뱉음.  <-- 중요!
-    const decodedToken = jwt.verify(token, 'HangHae99');
+    const decodedToken = jwt.verify(token, ACCESS_TOKEN_SECRET_KEY);
     //     - 그 밖의 AccessToken 검증에 실패한 경우 - “인증 정보가 유효하지 않습니다.”
-
     // 3. 비즈니스 로직(데이터 처리)
     //     - Payload에 담긴 사용자 ID를 이용하여 사용자 정보를 조회합니다.
     //     - Payload에 담긴 사용자 ID와 일치하는 사용자가 없는 경우 - “인증 정보와 일치하는 사용자가 없습니다.”
-    const user = await prisma.users.findFirst({
-      where: {
-        userId: decodedToken.id,
-      },
-    });
+    const user = await usersRepository.findUserById(decodedToken.id);
+
     if (!user) {
       return res
         .status(401)
@@ -47,7 +47,6 @@ export default async (req, res, next) => {
     //     - 조회 된 사용자 정보를 `req.user`에 담고, 다음 동작을 진행합니다.
     req.user = user; // - 조회 된 사용자 정보를 `req.user`에 담고,
     next(); //  다음 동작을 진행합니다.
-
   } catch (error) {
     // 토큰이 만료되었거나, 조작되었을 때, 에러 메시지를 다르게 출력합니다.
     switch (error.name) {
