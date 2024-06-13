@@ -1,6 +1,5 @@
 import express from 'express'; // 라우터를 생성하기 위해서 작성, express 라이브러리를 가져오는 것!
 import requireAccessTokenMiddleware from '../middlewares/require-access-token.middleware.js';
-
 import { UserController } from '../controllers/users.controller.js';
 
 const router = express.Router();

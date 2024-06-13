@@ -52,6 +52,7 @@ export class AuthService {
     // accessToken 발급
     const accessToken = createAccessToken(foundUser.userId);
 
+    // eslint-disable-next-line no-unused-vars
     const { password: _, ...restfoundUser } = foundUser;
     return { ...restfoundUser, accessToken: `Bearer ${accessToken}` };
   };
