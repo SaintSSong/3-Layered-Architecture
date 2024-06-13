@@ -43,8 +43,9 @@ export class ResumeController {
 
       const myResume = await this.resumeService.myResume(userId, resumeId);
 
-      return res.status(HTTP_STATUS.OK).json({ myResume });
+      return res.status(HTTP_STATUS.OK).json({ data: myResume });
     } catch (err) {
+      // console.log(err);
       next(err);
     }
   };

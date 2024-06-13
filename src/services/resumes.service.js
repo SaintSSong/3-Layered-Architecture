@@ -53,6 +53,8 @@ export class ResumeService {
       throw new HttpError.NotFound('이력서가 존재하지 않습니다.');
     }
 
+    console.log('Hi', myResume);
+
     const resume = {
       resumeId: myResume.resumeId,
       name: myResume.user.name,
