@@ -17,11 +17,7 @@ export class ResumeService {
       throw new Error('자기소개는 150자 이상 작성해야 합니다.');
     }
 
-    const createdResume = await this.resumeRepository.createById(
-      userId,
-      title,
-      selfIntroduction,
-    );
+    const createdResume = await this.resumeRepository.createById(userId, title, selfIntroduction);
 
     // 입력된 값을 가져 나오면 그걸 createdResume에 넣고 각 return요소에 넣어서 반환한다.
     return {
@@ -33,10 +29,7 @@ export class ResumeService {
 
   // 나의 이력서 목록 조회
   ResumesByMyId = async (userId, sort) => {
-    const foundMyResumes = await this.resumeRepository.ResumesByMyId(
-      userId,
-      sort,
-    );
+    const foundMyResumes = await this.resumeRepository.ResumesByMyId(userId, sort);
 
     if (!foundMyResumes) {
       throw new Error({ data: [] });
@@ -53,5 +46,24 @@ export class ResumeService {
     }));
 
     return resumes;
+  };
+
+  // 이력서 상세 조회
+  myResume = async (userId, resumeId) => {
+    const myResume = await this.resumeRepository.myResume(userId, resumeId);
+
+    if (!myResume) throw new Error('이력서가 존재하지 않습니다.');
+
+    const resume = {
+      resumeId: myResume.resumeId,
+      name: myResume.user.name,
+      title: myResume.title,
+      self: myResume.selfIntroduction,
+      status: myResume.status,
+      createdAt: myResume.createdAt,
+      updatedAt: myResume.updatedAt,
+    };
+
+    return resume;
   };
 }

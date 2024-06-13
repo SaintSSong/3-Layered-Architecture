@@ -7,14 +7,13 @@ const router = express.Router();
 const resumeController = new ResumeController();
 
 // 이력서 생성
-router.post(
-  '/resume',
-  requireAccessTokenMiddleware,
-  resumeController.createResume,
-);
+router.post('/resume', requireAccessTokenMiddleware, resumeController.createResume);
 
 // 이력서 조회 (토큰 쓴 이유 : 로그인 한 사람 이력서만 봐야하니까)
 router.get('/resume', requireAccessTokenMiddleware, resumeController.myResumes);
+
+// 이력서 상세 조회 (토큰 쓴 이유 : 로그인 한 사람 이력서만 봐야하니까)
+router.get('/resume/:resumeId', requireAccessTokenMiddleware, resumeController.myResume);
 
 // //이력서 생성 API (AccessToken 인증 필요)
 // router.post('/resume', requireAccessTokenMiddleware, async (req, res, next) => {

@@ -33,16 +33,18 @@ export class ResumeRepository {
     return resumes;
   };
 
-  //   ResumesByMyId = async (userId, sort) => {
-  //     const resumes = await prisma.resumes.findMany({
-  //       where: {
-  //         userId: +userId,
-  //       },
-  //       orderBy: {
-  //         createdAt: sort.toUpperCase() === 'asc' ? 'asc' : 'desc', // 삼항 연산자 공부하기.
-  //       },
-  //     });
+  // 이력서 상세 조회
+  myResume = async (userId, resumeId) => {
+    const resume = await prisma.resumes.findFirst({
+      where: {
+        userId: +userId,
+        resumeId: +resumeId,
+      },
+      include: {
+        user: true,
+      },
+    });
 
-  //     return resumes;
-  //   };
+    return resume;
+  };
 }
