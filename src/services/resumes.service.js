@@ -52,7 +52,9 @@ export class ResumeService {
   myResume = async (userId, resumeId) => {
     const myResume = await this.resumeRepository.myResume(userId, resumeId);
 
-    if (!myResume) throw new Error('이력서가 존재하지 않습니다.');
+    if (!myResume) {
+      throw new Error('이력서가 존재하지 않습니다.');
+    }
 
     const resume = {
       resumeId: myResume.resumeId,
@@ -65,5 +67,22 @@ export class ResumeService {
     };
 
     return resume;
+  };
+
+  // 이력서 수정
+  changeResume = async (userId, resumeId, title, selfIntroduction) => {
+    // 수정 내용을 입력 안했을 때 나오는 오류
+    if (!title && !selfIntroduction) {
+      throw new Error('수정 할 정보를 입력해 주세요.');
+    }
+
+    const changedResume = await this.resumeRepository.changeResume(userId, resumeId, title, selfIntroduction);
+
+    // 이력서 정보가 없는 경우 - “이력서가 존재하지 않습니다.”
+    if (!changedResume) {
+      throw new Error('이력서가 존재하지 않습니다.');
+    }
+
+    return changedResume;
   };
 }

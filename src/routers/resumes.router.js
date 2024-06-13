@@ -15,6 +15,12 @@ router.get('/resume', requireAccessTokenMiddleware, resumeController.myResumes);
 // 이력서 상세 조회 (토큰 쓴 이유 : 로그인 한 사람 이력서만 봐야하니까)
 router.get('/resume/:resumeId', requireAccessTokenMiddleware, resumeController.myResume);
 
+// 이력서 수정
+router.patch('/resume/:resumeId', requireAccessTokenMiddleware, resumeController.changeResume);
+
+// 이력서 삭제
+router.delete();
+
 // //이력서 생성 API (AccessToken 인증 필요)
 // router.post('/resume', requireAccessTokenMiddleware, async (req, res, next) => {
 //   //     1. 요청 정보

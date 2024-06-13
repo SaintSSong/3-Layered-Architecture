@@ -20,7 +20,7 @@ export class ResumeRepository {
 
     const resumes = await prisma.resumes.findMany({
       where: {
-        userId: +userId,
+        userId: userId,
       },
       orderBy: {
         createdAt: sortOption,
@@ -37,8 +37,8 @@ export class ResumeRepository {
   myResume = async (userId, resumeId) => {
     const resume = await prisma.resumes.findFirst({
       where: {
-        userId: +userId,
-        resumeId: +resumeId,
+        userId: userId,
+        resumeId: Number(resumeId),
       },
       include: {
         user: true,
@@ -46,5 +46,20 @@ export class ResumeRepository {
     });
 
     return resume;
+  };
+
+  // 이력서 수정
+  changeResume = async (userId, resumeId, title, selfIntroduction) => {
+    const changedResume = await prisma.resumes.update({
+      where: {
+        userId: userId,
+        resumeId: Number(resumeId),
+      },
+      data: {
+        title,
+        selfIntroduction,
+      },
+    });
+    return changedResume;
   };
 }

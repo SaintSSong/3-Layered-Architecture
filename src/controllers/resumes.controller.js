@@ -46,4 +46,19 @@ export class ResumeController {
       next(err);
     }
   };
+
+  // 이력서 수정
+  changeResume = async (req, res, next) => {
+    try {
+      const { userId } = req.user;
+      const { resumeId } = req.params;
+      const { title, selfIntroduction } = req.body;
+
+      const changeResume = await this.resumeService.changeResume(userId, resumeId, title, selfIntroduction);
+
+      return res.status(200).json({ changeResume });
+    } catch (err) {
+      next(err);
+    }
+  };
 }
